@@ -3,9 +3,7 @@
 
 Estudos baseados no curso Udemy ministrado pelo Francis Klay Rocha,
 
-onde o foco se esta destacado em contruir uma aplicação utilizando as tecnologias 
-
-
+Curso com foco em desenvolvedores FullStack. 
 
 
 # Leia-me em andamento. 
