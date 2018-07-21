@@ -1,12 +1,33 @@
+<h1>
+    {{ title }}
+</h1>
+<br/>
+<app-tasks-list></app-tasks-list>
 
-  <h1>
-     {{ title }}!
-  </h1>
-  <br/>
-  <input type="text" [(ngModel)]="task">
-  <button type="button" (click)="add()">Add to list</button>
-  <ul>
-    <li *ngFor="let item of tasks" >
-      {{ item }}
-    </li>
-  </ul>
+
+<br/>
+{{ user | json}}
+<br/>
+{{ upperText | uppercase}}
+<br/>
+{{ lowerText | lowercase}}
+<br/>
+{{ percentValue | percent}}
+<br/>
+{{ date | date : 'dd-MM-yyyy' }}
+<br/>
+{{ money | currency : 'R$' }}
+
+<br/><br/>
+
+<div *ngIf="isAdmin0">
+    Administrator        
+</div>
+<br/>
+<div [ngSwitch]="profile">
+    <p *ngSwitchCase="0"> Valor diferente de {{ profile }}</p>
+    <p *ngSwitchCase="1"> Valor diferente de {{ profile }}</p>
+    <p *ngSwitchCase="2"> Valor igual de {{ profile }}</p> 
+    <p *ngSwitchDefault> Nenhum valor igual a {{ profile }}</p> 
+</div>
+
