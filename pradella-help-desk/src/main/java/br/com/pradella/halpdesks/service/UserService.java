@@ -1,0 +1,18 @@
+package br.com.pradella.halpdesks.service;
+
+import org.springframework.data.domain.Page;
+
+import br.com.pradella.halpdesks.entity.User;
+
+public interface UserService {
+
+	User FindbyEmail(String email);
+
+	User createOrUpdate(User user);
+	
+	User findById(String id);
+	
+	void delete(String id);
+	
+	Page<User> findAll(int page, int count);
+}
