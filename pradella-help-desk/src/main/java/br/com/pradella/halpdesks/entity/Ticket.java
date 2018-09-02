@@ -37,7 +37,7 @@ public class Ticket {
 	
 	private String image;
 	
-	private List<Changes> changes;
+	private List<ChangesStatus> changes;
 
 	
 	
@@ -129,11 +129,11 @@ public class Ticket {
 		this.image = image;
 	}
 
-	public List<Changes> getChanges() {
+	public List<ChangesStatus> getChanges() {
 		return changes;
 	}
 
-	public void setChanges(List<Changes> changes) {
+	public void setChanges(List<ChangesStatus> changes) {
 		this.changes = changes;
 	}
 	

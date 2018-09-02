@@ -9,7 +9,7 @@ import org.springframework.data.mongodb.core.mapping.Document;
 import br.com.pradella.halpdesks.enuns.StatusEnum;
 
 @Document
-public class Changes {
+public class ChangesStatus {
 
 	@Id
 	private String id;
