@@ -46,7 +46,7 @@ public class AuthenticationRestController {
 		SecurityContextHolder.getContext().setAuthentication(authentication);
 		final UserDetails userDetails = userDetailsService.loadUserByUsername(authenticationRequest.getEmail());
 		final String token = jwtTokenUtil.generateToken(userDetails);
-		final User user = userService.FindbyEmail(authenticationRequest.getEmail());
+		final User user = userService.findByEmail(authenticationRequest.getEmail());
 		user.setPassword(null);
 		return ResponseEntity.ok(new CurrentUser(token, user));
 	}
@@ -55,11 +55,11 @@ public class AuthenticationRestController {
 	@PostMapping(value="/api/reflesh")
 	public ResponseEntity<?> refleshAndGetAuthenticationToken(HttpServletRequest request) throws Exception{
 		String token = request.getHeader("Authorization");
-		String userName = jwtTokenUtil.getUserNameFromToken(token);
-		final User user = userService.FindbyEmail(userName);
+		String userName = jwtTokenUtil.getUsernameFromToken(token);
+		final User user = userService.findByEmail(userName);
 		
 		if (jwtTokenUtil.canTokenBeRefreshed(token)) {
-			String refreshedToken = jwtTokenUtil.refleshToken(token);
+			String refreshedToken = jwtTokenUtil.refreshToken(token);
 			return ResponseEntity.ok(new CurrentUser(refreshedToken, user));
 		} else {
 			return ResponseEntity.badRequest().body(null);

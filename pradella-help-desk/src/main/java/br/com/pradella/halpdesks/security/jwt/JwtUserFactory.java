@@ -10,9 +10,9 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import br.com.pradella.halpdesks.entity.User;
 import br.com.pradella.halpdesks.enuns.ProfileEnum;
 
-public class JwtUserfactory {
+public class JwtUserFactory {
 	
-	private JwtUserfactory() {
+	private JwtUserFactory() {
 	}
 	
 	public static JwtUser create(User user) {

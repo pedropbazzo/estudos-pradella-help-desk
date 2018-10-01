@@ -23,24 +23,22 @@ public class JwtAuthenticationTokenFilter extends OncePerRequestFilter {
 	@Autowired
 	private JwtTokenUtil jwtTokenUtil;
 
-	@Override
 	protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain chain)
 			throws ServletException, IOException {
-
 		String authToken = request.getHeader("Authorization");
-		String userName = jwtTokenUtil.getUserNameFromToken(authToken);
+		String username = jwtTokenUtil.getUsernameFromToken(authToken);
 
-		if (userName != null && SecurityContextHolder.getContext().getAuthentication() == null) {
-			UserDetails userDetails = this.userDetailsService.loadUserByUsername(userName);
-			if (jwtTokenUtil.vaidateToken(authToken, userDetails)) {
+		if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
+			UserDetails userDetails = this.userDetailsService.loadUserByUsername(username);
+			if (jwtTokenUtil.validateToken(authToken, userDetails)) {
 				UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(
 						userDetails, null, userDetails.getAuthorities());
 				authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
-				logger.info("authentication user " + userName + " , setting security context");
+				logger.info("authenticated user " + username + ", setting security context");
 				SecurityContextHolder.getContext().setAuthentication(authentication);
 			}
-
 		}
+		chain.doFilter(request, response);
 	}
 
 }

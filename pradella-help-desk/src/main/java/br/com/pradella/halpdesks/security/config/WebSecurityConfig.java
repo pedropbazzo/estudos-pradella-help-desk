@@ -22,16 +22,14 @@ import br.com.pradella.halpdesks.security.jwt.JwtAuthenticationTokenFilter;
 @EnableWebSecurity
 @EnableGlobalMethodSecurity(prePostEnabled = true)
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter{
-	
 	@Autowired
-	private JwtAuthenticationEntryPoint unauthorizedHandle;
+	private JwtAuthenticationEntryPoint unauthorizedHandler;
 
 	@Autowired
 	private UserDetailsService userDetailsService;
 
-	
 	@Autowired
-	public void configuredAuthentication(AuthenticationManagerBuilder authenticationManagerBuilder) throws Exception {
+	public void configureAuthentication(AuthenticationManagerBuilder authenticationManagerBuilder) throws Exception {
 		authenticationManagerBuilder.userDetailsService(this.userDetailsService).passwordEncoder(passwordEncoder());
 	}
 
@@ -39,37 +37,29 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter{
 	public PasswordEncoder passwordEncoder() {
 		return new BCryptPasswordEncoder();
 	}
-	
+
 	@Bean
-	public JwtAuthenticationTokenFilter authenticationTokenFilterBean() throws Exception{ 
+	public JwtAuthenticationTokenFilter authenticationTokenFilterBean() throws Exception {
 		return new JwtAuthenticationTokenFilter();
 	}
 	
 	@Override
-	protected void configure(HttpSecurity httpSecurity) throws Exception{
-		httpSecurity.csrf().disable()
-				.exceptionHandling().authenticationEntryPoint(unauthorizedHandle)
-				.and()
-				.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-				.and()
-				.authorizeRequests()
-				.antMatchers(
-						HttpMethod.GET,
-						"/",
-						"/*.html",
-						"/favicon.ico",
-						"/**/*.html",
-						"/**/*.css",
-						"/**/*.js"
-						).permitAll()
-				.antMatchers("/api/auth/**")
-				.permitAll()
-				.anyRequest()
-				.authenticated();
-		httpSecurity.addFilterBefore(authenticationTokenFilterBean(), UsernamePasswordAuthenticationFilter.class);
-		httpSecurity.headers().cacheControl();
-		
-	}
-	
-
-}
+    protected void configure(HttpSecurity httpSecurity) throws Exception {
+        httpSecurity.csrf().disable()
+                .exceptionHandling().authenticationEntryPoint(unauthorizedHandler).and()
+                .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and()
+                .authorizeRequests()
+                .antMatchers(
+                        HttpMethod.GET,
+                        "/",
+                        "/*.html",
+                        "/favicon.ico",
+                        "/**/*.html",
+                        "/**/*.css",
+                        "/**/*.js"
+                ).permitAll()
+                .antMatchers("/api/auth/**").permitAll()
+                .anyRequest().authenticated();
+        httpSecurity.addFilterBefore(authenticationTokenFilterBean(), UsernamePasswordAuthenticationFilter.class);
+        httpSecurity.headers().cacheControl();
+    }}

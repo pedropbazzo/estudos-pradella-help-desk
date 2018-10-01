@@ -6,7 +6,7 @@ import br.com.pradella.halpdesks.entity.User;
 
 public interface UserService {
 
-	User FindbyEmail(String email);
+	User findByEmail(String email);
 
 	User createOrUpdate(User user);
 	

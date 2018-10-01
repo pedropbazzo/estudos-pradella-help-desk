@@ -14,13 +14,13 @@ public class JwtUser implements UserDetails{
 	private final String id;
 	private final String userName;
 	private final String password;
-	private final Collection<? extends GrantedAuthority> authority;
+	private final Collection<? extends GrantedAuthority> authorities;
 	
-	public JwtUser(String id, String userName, String password, Collection<? extends GrantedAuthority> authority) {
+	public JwtUser(String id, String userName, String password, Collection<? extends GrantedAuthority> authorities) {
 		this.id = id;
 		this.userName = userName;
 		this.password = password;
-		this.authority = authority;
+		this.authorities = authorities;
 	}
 
 	@JsonIgnore
@@ -30,7 +30,7 @@ public class JwtUser implements UserDetails{
 	
 	@Override
 	public Collection<? extends GrantedAuthority> getAuthorities() {
-		return authority;
+		return authorities;
 	}
 
 	@JsonIgnore
