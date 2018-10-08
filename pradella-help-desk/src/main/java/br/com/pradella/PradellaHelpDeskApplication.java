@@ -3,6 +3,7 @@ package br.com.pradella;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.context.annotation.Bean;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 import br.com.pradella.halpdesks.entity.User;
@@ -16,6 +17,7 @@ public class PradellaHelpDeskApplication {
 		SpringApplication.run(PradellaHelpDeskApplication.class, args);
 	}
 	
+	@Bean
 	CommandLineRunner init(UserRepo userRepo, PasswordEncoder passwordEncoder) {
 		return args -> {
 			initUsers(userRepo, passwordEncoder);
