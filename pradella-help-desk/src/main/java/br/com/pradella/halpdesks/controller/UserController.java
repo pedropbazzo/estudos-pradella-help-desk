@@ -1,4 +1,4 @@
-package br.com.pradella.halpdesks.security.controller;
+package br.com.pradella.halpdesks.controller;
 
 import javax.servlet.http.HttpServletRequest;
 
