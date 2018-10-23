@@ -24,6 +24,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import br.com.pradella.halpdesks.dto.Summary;
 import br.com.pradella.halpdesks.entity.ChangesStatus;
 import br.com.pradella.halpdesks.entity.Ticket;
 import br.com.pradella.halpdesks.entity.User;
@@ -175,8 +176,8 @@ public class TicketController {
 	}
 
 	@GetMapping(value = "{page}/{count}/number}/{title}/{status}/{priority}/{assigned}")
-	@PreAuthorize("hasAnyRole('CUSTOMER')")
-	private ResponseEntity<Response<Page<Ticket>>> findByParamss(HttpServletRequest request, 
+	@PreAuthorize("hasAnyRole('CUSTOMER','TECHNICIAN')")
+	private ResponseEntity<Response<Page<Ticket>>> findByParams(HttpServletRequest request, 
 												@PathVariable("page") int page,
 												@PathVariable("count") int count,
 												@PathVariable("number") Integer number,
@@ -210,8 +211,89 @@ public class TicketController {
 	    return ResponseEntity.ok(response);
 	}
 	
-	
+		
+	@PutMapping(value = "{id}/{status}")
+	@PreAuthorize("hasAnyRole('CUSTOMER','TECHNICIAN')")
+	private ResponseEntity<Response<Ticket>> chanceStatus(@PathVariable("id") String id, 
+								@PathVariable("status") String status,
+								HttpServletRequest request,
+								@RequestBody Ticket ticket,
+								BindingResult result) {
+		Response<Ticket> response = new Response<>();
 
+		try {
+			validateChangeStatus(id, status, result);
+			if (result.hasErrors()) {
+				result.getAllErrors()
+						.forEach(error -> 
+							response.getErrors()
+							.add(error
+									.getDefaultMessage()));
+				return ResponseEntity.badRequest().body(response);
+			}
+			Ticket ticketCurrent = ticketService.findById(id);			
+			ticketCurrent.setStatus(StatusEnum.getStatus(status));
+			if (status.equals("Assigned")) {
+				ticketCurrent.setAssignedUser(userFromRequest(request));
+			}
+
+			Ticket ticketPersisted = (Ticket) ticketService.createOrUpdate(ticketCurrent);
+			ChangesStatus changesStatus = new ChangesStatus();
+			changesStatus.setUser(userFromRequest(request));
+			changesStatus.setDateChanges(new Date());
+			changesStatus.setStatus(StatusEnum.getStatus(status));
+			changesStatus.setTicket(ticketPersisted);
+			ticketService.createChangeStatus(changesStatus);
+			response.setData(ticketPersisted);
+			
+		} catch (Exception e) {
+			response.getErrors().add(e.getMessage());
+			return ResponseEntity.badRequest().body(response);
+		}
+
+	    return ResponseEntity.ok(response);
+	}
+
+	
+	@GetMapping(value = "/summary")
+	@PreAuthorize("hasAnyRole('CUSTOMER','TECHNICIAN')")
+	private ResponseEntity<Response<Summary>> findSummary(HttpServletRequest request) {
+		Response<Summary> response = new Response<>();
+		Summary summary = new Summary();
+		int amountNew = 0;
+		int amountResolved = 0;
+		int amountApproved = 0;
+		int amountDisaproved = 0;
+		int amountAssigned = 0;
+		int amountClose = 0;
+		
+		Iterable<Ticket> tickets = ticketService.findAll();
+		if (tickets != null) {
+			for (Iterator<Ticket> iterator = tickets.iterator(); iterator.hasNext();) {
+				Ticket ticket = (Ticket) iterator.next();
+				if (ticket.getStatus().equals(StatusEnum.NEW)) amountNew++;
+				if (ticket.getStatus().equals(StatusEnum.RESOLVED)) amountResolved++;
+				if (ticket.getStatus().equals(StatusEnum.APPROVED)) amountApproved++;
+				if (ticket.getStatus().equals(StatusEnum.DISAPPROVED)) amountDisaproved++;
+				if (ticket.getStatus().equals(StatusEnum.ASSIGNED)) amountAssigned++;
+				if (ticket.getStatus().equals(StatusEnum.CLOSED)) amountClose++;
+			}
+		}
+		summary.setAmountNew(amountNew);
+		summary.setAmountResolved(amountResolved);
+		summary.setAmountApproved(amountApproved);
+		summary.setAmountDisaproved(amountDisaproved);
+		summary.setAmountAssigned(amountAssigned);
+		summary.setAmountClose(amountClose);
+		response.setData(summary);
+	    return ResponseEntity.ok(response);
+	}
+	
+	
+	
+	
+	
+	// methodos auxiliares
 	private Integer generateNumber() {
 		return new Random().nextInt(9999);
 	}
@@ -234,6 +316,15 @@ public class TicketController {
 		}
 		if (ticket.getTitle() == null) {
 			result.addError(new ObjectError("Ticket", "Title no information"));
+		}
+	}
+	
+	private void validateChangeStatus(String id, String status, BindingResult result) {
+		if (id == null || id == "" ) {
+			result.addError(new ObjectError("Ticket", "Id no information"));
+		}
+		if (status == null || status == "") {
+			result.addError(new ObjectError("Ticket", "Status no information"));
 		}
 	}
 }
