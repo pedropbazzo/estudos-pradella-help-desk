@@ -34,6 +34,7 @@ public class UserController {
 
 	@Autowired
 	private PasswordEncoder passwordEncoder;
+	
 
 	@PostMapping
 	@PreAuthorize("hasAnyRole('ADMIN')")

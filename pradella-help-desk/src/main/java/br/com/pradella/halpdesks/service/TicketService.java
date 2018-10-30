@@ -1,12 +1,11 @@
 package br.com.pradella.halpdesks.service;
 
 import org.springframework.data.domain.Page;
-import org.springframework.stereotype.Component;
 
 import br.com.pradella.halpdesks.entity.ChangesStatus;
 import br.com.pradella.halpdesks.entity.Ticket;
 
-@Component
+
 public interface TicketService {
 
 	Ticket createOrUpdate (Ticket ticket);
@@ -21,7 +20,7 @@ public interface TicketService {
 	
 	Iterable<ChangesStatus> listChangesStatus(String ticketId);
 	
-	Page<Ticket> findbyCurrentUser(int page, int count, String userId);
+	Page<Ticket> findByCurrentUser(int page, int count, String userId);
 	
 	Page<Ticket> findByParameters(int page, int count, String title, String status, String priority);
 	
@@ -31,5 +30,5 @@ public interface TicketService {
 	
 	Iterable<Ticket> findAll();
 	
-	Page<Ticket> findbyParameterAndAssignedUser(int page, int count, String title, String status, String priority, String assignedUser);
+	Page<Ticket> findByParameterAndAssignedUser(int page, int count, String title, String status, String priority, String assignedUser);
 }
