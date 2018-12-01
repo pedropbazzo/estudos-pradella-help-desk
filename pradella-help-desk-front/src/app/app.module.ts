@@ -14,6 +14,7 @@ import { LoginComponent } from './components/security/login/login.component';
 import { routes } from './app.routes';
 import { SharedService } from './services/shared.service';
 import { AuthGuard } from './components/security/auth.guard';
+import { UserNewComponent } from './components/user-new/user-new.component';
 
 @NgModule({
   declarations: [
@@ -23,6 +24,7 @@ import { AuthGuard } from './components/security/auth.guard';
     FooterComponent,
     HomeComponent,
     LoginComponent,
+    UserNewComponent,
   ],
   imports: [
     BrowserModule,
