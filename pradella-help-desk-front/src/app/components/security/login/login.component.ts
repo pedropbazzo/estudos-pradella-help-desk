@@ -1,8 +1,8 @@
 import { Router } from '@angular/router';
 import { Component, OnInit } from '@angular/core';
 
-import { UserService } from './../../services/user.service';
-import { SharedService } from './../../services/shared.service';
+import { UserService } from './../../../services/user.service';
+import { SharedService } from './../../../services/shared.service';
 import { User } from 'src/app/model/user.model';
 import { CurrentUser } from 'src/app/model/current-user.model';
 

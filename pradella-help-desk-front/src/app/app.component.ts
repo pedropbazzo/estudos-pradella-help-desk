@@ -23,4 +23,9 @@ export class AppComponent implements OnInit{
     ); 
   }
 
+  showContentWrapper(){
+    return {
+      'content-wrapper' : this.shared.isLogged()
+    }
+  }
 }
