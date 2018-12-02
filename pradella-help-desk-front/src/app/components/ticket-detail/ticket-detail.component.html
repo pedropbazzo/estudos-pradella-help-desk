@@ -1,0 +1,83 @@
+<div class="col-md-10" style="margin-left: 0%">
+  <div class="box box-info">
+    <div class="box-header with-border">
+      <h3>Details Ticket</h3>
+    </div>
+    <form class="form-horizontal">
+      <div [ngClass]="classCss" role="alert" *ngIf="message">
+        <strong>{{ message.text }}</strong>
+      </div>
+      <div class="box-body">
+        <ul class="list-group lsit-group-unbordered">
+          <li class="list-group-item">
+            <b>Number: </b> <span> {{ ticket.number }}</span>
+            <span class="pull-right"><b>Title :</b><span>{{ ticket.title }}</span></span>
+          </li>
+          <li class="list-group-item">
+            <b>Priority: </b> <span> {{ ticket.priority }}</span>
+            <span class="pull-right"><b>Create by :</b><span>{{ ticket?.user?.email }}</span></span>
+          </li>
+          <li class="list-group-item">
+            <b>Status: </b> <span> {{ ticket.status }}</span>
+            <span class="pull-right"><b>Assigned :</b><span>{{ ticket?.assignedUser?.email }}</span></span>
+          </li>
+          <li class="list-group-item">
+            <b>Date: </b> <span> {{ ticket.date | date:'dd/MM/yyyy' }}</span>
+            <span class="pull-right"><b>Description :</b><span>{{ ticket?.description }}</span></span>
+          </li>
+          <li class="list-group-item">
+            <span>
+              <img [src]="ticket.image" width="450px" height="370px">
+            </span>
+            <span class="pull-right">
+              <table class="table table-bordered">
+                   <tr>
+                     <th>User Change</th>
+                     <th>Date Change Status</th>
+                     <th>Status</th>
+                   </tr>
+                   <tr *ngFor="let change of ticket.changes">
+                     <td>{{ change?.userChange?.email }}</td>
+                     <td>{{ change?.dateChange | date:'dd/MM/yyyy HH:mm:ss' }} </td>
+                     <td>{{ change?.status }}</td>
+                   </tr>
+              </table>
+            </span>
+          </li>
+        </ul>
+      </div>
+      <div class="box-footer">
+        <button 
+          class="btn btn-primary"
+          (click)="changeStatus('ASSIGNED')"
+          *ngIf="shared.user.profile == 'TECHNICIAN' && ticket.status === 'NEW'">
+            Accept
+        </button>
+        <button 
+          class="btn btn-primary"
+          (click)="changeStatus('RESOLVED')"
+          *ngIf="shared.user.profile == 'TECHNICIAN' && (ticket.status === 'ASSIGNED' || ticket.status === 'DISAPPROVED')">
+            Solve
+        </button>
+        <button 
+          class="btn btn-primary"
+          (click)="changeStatus('APPROVED')"
+          *ngIf="shared.user.profile == 'CUSTOMER' && ticket.status === 'RESOLVED'">
+            Approve
+        </button>
+        <button 
+         class="btn btn-primary"
+         (click)="changeStatus('DISAPPROVED')"
+         *ngIf="shared.user.profile == 'CUSTOMER' && ticket.status === 'RESOLVED'">
+           DISAPPROVE
+        </button>
+        <button 
+          class="btn btn-primary"
+          (click)="changeStatus('CLOSED')"
+          *ngIf="shared.user.profile == 'TECHNICIAN' && ticket.status === 'APPROVED'">
+           Close
+         </button>
+        </div>
+    </form>
+  </div>
+</div>
