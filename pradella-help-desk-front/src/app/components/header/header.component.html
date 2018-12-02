@@ -9,8 +9,12 @@
     </a>
     <div class="navbar-custom-menu">
      <p style="color: white"> 
-      lucas.pradella@hotmail.com - ADMIN | 
-      <button>TESTE</button>
+      {{ shared.user.email }} - {{ shared.user.profile }} | 
+      <button class="btn btn-link" (click)="signOut()">
+       <font style="color: white"> 
+          Sign out
+       </font>
+      </button>
     </p>
     </div>
   </nav>
